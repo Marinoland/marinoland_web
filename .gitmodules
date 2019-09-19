@@ -1,0 +1,3 @@
+[submodule "marinoland_json"]
+	path = marinoland_json
+	url = https://github.com/Marinoland/marinoland_json.git
