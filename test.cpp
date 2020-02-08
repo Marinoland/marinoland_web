@@ -26,6 +26,7 @@ int main (int argc, char **argv)
     web::RestClient().get("http://dummy.restapiexample.com/api/v1/employees",
     [](web::RestWebResponse & response) {
         response.getJson()->asObject([] (json::JsonObjectNode & root) {
+            cout << root.to_json() << endl;
             root.get("data")->asArray([] (json::JsonArrayNode & data) {
                 for(json::nodeptr employeeptr : data) {
                     employeeptr->asObject([] (json::JsonObjectNode & employee) {
