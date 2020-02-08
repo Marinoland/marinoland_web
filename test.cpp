@@ -25,10 +25,24 @@ int main (int argc, char **argv)
 
     web::RestClient().get("http://dummy.restapiexample.com/api/v1/employees",
     [](web::RestWebResponse & response) {
-        json::nodeptr tree = response.getJson();
-        cout << tree->to_string() << endl;
+        response.getJson()->asObject([] (json::JsonObjectNode & root) {
+            root.get("data")->asArray([] (json::JsonArrayNode & data) {
+                for(json::nodeptr employeeptr : data) {
+                    employeeptr->asObject([] (json::JsonObjectNode & employee) {
+                        cout
+                        << employee.get("id")->to_string()
+                        << ' '
+                        << employee.get("employee_name")->to_string()
+                        << " age "
+                        << employee.get("employee_age")->to_string()
+                        << endl;
+                    });
+                }
+            });
+        });
+        //json::JsonObjectNode *root = dynamic_cast<json::JsonObjectNode *>(tree.get());
         /*
-        for (pair<string, nodeptr> node : tree) {
+        for (pair<string, json::nodeptr> node : tree) {
             const ptree & record = node.second;
             cout << record.get("employee_name", "null") <<  "\t"
                 << record.get("employee_age", "null") << endl;

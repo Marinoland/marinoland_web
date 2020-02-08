@@ -2,15 +2,23 @@ cmake_minimum_required(VERSION 2.8)
 project (web)
 
 
-execute_process( COMMAND git clone https://github.com/Marinoland/marinoland_json.git $ENV{HOME}/.marinoland/json )
-execute_process( COMMAND git pull WORKING_DIRECTORY $ENV{HOME}/.marinoland/json )
-execute_process( COMMAND cmake . WORKING_DIRECTORY $ENV{HOME}/.marinoland/json )
-execute_process( COMMAND make json WORKING_DIRECTORY $ENV{HOME}/.marinoland/json )
+if(WIN32) 
+    set(CONFIGURE_SCRIPT configure.bat)
+    set(JSON_NAME libjson.dll)
+else()
+    set(CONFIGURE_SCRIPT ./configure.sh)
+    set(JSON_NAME libjson.so)
+	add_definitions(-std=c++11)
+endif()
 
+set(JSONDIR ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json)
 
-include_directories(/usr/include $ENV{HOME}/.marinoland/json)
-add_definitions(-std=c++11)
-add_library(web SHARED
+execute_process( COMMAND chmod +x ${CONFIGURE_SCRIPT} WORKING_DIRECTORY ${JSONDIR} )
+execute_process( COMMAND ${CONFIGURE_SCRIPT} WORKING_DIRECTORY ${JSONDIR} )
+execute_process( COMMAND make json WORKING_DIRECTORY ${JSONDIR} )
+
+include_directories(${BOOST_INCLUDEDIR} ${JSONDIR} /usr/include)
+add_library(web STATIC
     HttpClient.cpp
     HttpsClient.cpp
     RestClient.cpp
@@ -18,6 +26,6 @@ add_library(web SHARED
     WebClient.cpp
     WebResponse.cpp)
 
-link_directories($ENV{HOME}/.marinoland/json /usr/local/lib)
-add_executable(sample sample.cpp)
-target_link_libraries(sample LINK_PUBLIC web json pthread boost_filesystem boost_system ssl crypto)
+link_directories(${JSONDIR} /usr/local/lib ${BOOST_LIBRARYDIR})
+add_executable(test test.cpp)
+target_link_libraries(test LINK_PUBLIC web json pthread boost_system boost_filesystem ssl crypto)

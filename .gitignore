@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+test
 
 # cmake generated stuff
 Makefile
@@ -37,5 +38,5 @@ CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 
+.vs
 
-sample
