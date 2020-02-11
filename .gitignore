@@ -38,5 +38,12 @@ CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 
+# visual studio stuff
 .vs
+*.vcxproj*
+web.dir
+web.sln
+x64
+test.dir
+test.exe.dir
 
