@@ -76,6 +76,7 @@ namespace web {
             const string & port) : HttpClient(host, port)
     {
         ctx = make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv12_client);
+	ctx->set_default_verify_paths();
         load_root_certificates(*ctx);
         ctx->set_verify_mode(ssl::verify_peer);
 
