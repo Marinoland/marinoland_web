@@ -19,7 +19,8 @@ namespace web {
     public:
         HttpsClient(const std::string & host, const std::string & port);
 
-        WebResponse get(const std::string & path);
+        WebResponse get(const std::string & path, const std::map<std::string, std::string> header);
+        WebResponse post(const std::string & path, const std::map<std::string, std::string> header, const std::string body);
 
     private:
         std::shared_ptr<boost::asio::ssl::context> ctx;

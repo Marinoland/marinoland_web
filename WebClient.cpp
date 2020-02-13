@@ -52,12 +52,27 @@ namespace web {
         }
     }
     void WebClient::get(string url,
+            map<string, string> header,
             std::function<void(WebResponse response)> f) {
         
         parseUrl(url, [&] (HttpClient & client, string path) {
-            WebResponse response = client.get(path);
+            WebResponse response = client.get(path, header);
             if(response.getCode() == 301) {
-                get(response["Location"], f);
+                get(response["Location"], header, f);
+            } else {
+                f(response);
+            }
+        });
+    }
+    void WebClient::post(string url,
+            map<string, string> header,
+            std::string body,
+            std::function<void(WebResponse response)> f) {
+        
+        parseUrl(url, [&] (HttpClient & client, string path) {
+            WebResponse response = client.post(path, header, body);
+            if(response.getCode() == 301) {
+                post(response["Location"], header, body, f);
             } else {
                 f(response);
             }

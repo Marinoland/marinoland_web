@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-test
+testweb
 
 # cmake generated stuff
 Makefile
@@ -44,6 +44,6 @@ cmake_install.cmake
 web.dir
 web.sln
 x64
-test.dir
-test.exe.dir
+testweb.dir
+testweb.exe.dir
 

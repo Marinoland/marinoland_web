@@ -15,7 +15,8 @@ namespace web {
     public:
         HttpClient(const std::string & host, const std::string & port);
 
-        virtual WebResponse get(const std::string & path);
+        virtual WebResponse get(const std::string & path, const std::map<std::string, std::string> header);
+        virtual WebResponse post(const std::string & path, const std::map<std::string, std::string> header, const std::string body);
 
     protected:
         const std::string host;

@@ -22,5 +22,5 @@ include_directories(
     ${JSONDIR}
     /usr/include)
 link_directories(${JSONLIBDIR} /usr/local/lib $ENV{BOOST_LIBRARYDIR})
-add_executable(test test.cpp)
-target_link_libraries(test LINK_PUBLIC web json pthread boost_system boost_filesystem boost_date_time ssl crypto)
+add_executable(testweb testweb.cpp)
+target_link_libraries(testweb LINK_PUBLIC web json pthread boost_system boost_filesystem boost_date_time ssl crypto)

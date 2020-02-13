@@ -84,7 +84,7 @@ namespace web {
         resolvedHost = resolver.resolve(host, port);
     }
 
-    WebResponse HttpsClient::get(const string & path)
+    WebResponse HttpsClient::get(const string & path, const map<string, string> header)
     {
         beast::ssl_stream<beast::tcp_stream> stream(ioc, *ctx);
         // Set SNI Hostname (many hosts need this to handshake successfully)
@@ -100,6 +100,40 @@ namespace web {
             http::verb::get, path, 11};
         req.set(http::field::host, host);
         req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+        for(pair<string, string> entry : header) {
+            req.set(entry.first, entry.second);
+        }
+        http::write(stream, req);
+        beast::flat_buffer buffer;
+        http::response<http::dynamic_body> res;
+        http::read(stream, buffer, res);
+        beast::error_code ec;
+        stream.shutdown(ec);
+        WebResponse response(res);
+        return response;
+    }
+
+    WebResponse HttpsClient::post(const string & path, const map<string, string> header, const string body)
+    {
+        beast::ssl_stream<beast::tcp_stream> stream(ioc, *ctx);
+        // Set SNI Hostname (many hosts need this to handshake successfully)
+        if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
+        {
+            beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
+            throw beast::system_error{ec};
+        }
+        beast::get_lowest_layer(stream).connect(resolvedHost);
+        stream.handshake(ssl::stream_base::client);
+
+        http::request<http::string_body> req{
+            http::verb::post, path, 11};
+        req.set(http::field::host, host);
+        req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+        req.set("Content-Length", body.size());
+        for(pair<string, string> entry : header) {
+            req.set(entry.first, entry.second);
+        }
+        req.body() = body;
         http::write(stream, req);
         beast::flat_buffer buffer;
         http::response<http::dynamic_body> res;

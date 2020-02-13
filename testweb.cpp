@@ -18,12 +18,14 @@ int main (int argc, char **argv)
 
 
     web::WebClient().get("https://google.com/",
+    map<string,string>(),
     [](web::WebResponse response) {
         cout << "Status: " << response.getCode() << endl;
         cout << "Body: " << response.getBody().substr(0, 100) << endl;
     });
 
     web::RestClient().get("http://dummy.restapiexample.com/api/v1/employees",
+    map<string, string>(),
     [](web::RestWebResponse & response) {
         response.getJson()->asObject([] (json::JsonObjectNode & root) {
             cout << root.to_json() << endl;
