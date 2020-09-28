@@ -51,6 +51,7 @@ include_directories(
 link_directories(
     ${JSON_OUTDIR}
     ${OPENSSLDIR}
+    ${BOOSTDIR}
     ${BOOSTDIR}/stage/lib)
 add_executable(testweb testweb.cpp)
 target_link_libraries(testweb LINK_PUBLIC web json ${LIBS}
