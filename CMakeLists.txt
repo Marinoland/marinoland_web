@@ -5,7 +5,7 @@ set(JSONDIR ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json)
 set(OPENSSLDIR ${CMAKE_CURRENT_SOURCE_DIR}/openssl)
 set(BOOSTDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 IF (WIN32)
-    set(SLASH .\\)
+    set(SLASH \\)
     set(SH_EXT bat)
     set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
     set(JSON_OUTDIR ${JSONDIR}/Release)
@@ -13,7 +13,7 @@ IF (WIN32)
     set(BOOST_LIBVER -vc142-mt-x64-1_75)
     add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
-    set(SLASH ./)
+    set(SLASH /)
     set(SH_EXT sh)
     set(OPENSSL_INCLUDEDIR ${OPENSSLDIR})
     set(JSON_OUTDIR ${JSONDIR})
@@ -46,7 +46,7 @@ add_library(web STATIC
 
 include_directories(
     ${OPENSSL_INCLUDEDIR}
-    ${BOOSTDIR}
+    ${BOOSTDIR}/libs/beast/include
     ${JSONDIR})
 link_directories(
     ${JSON_OUTDIR}
