@@ -10,6 +10,7 @@ IF (WIN32)
     set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
     set(JSON_OUTDIR ${JSONDIR}/Release)
     set(LIBS )
+    set(LIBPREFIX lib)
     set(BOOST_LIBVER -vc142-mt-x64-1_75)
     add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
@@ -18,6 +19,7 @@ ELSE()
     set(OPENSSL_INCLUDEDIR ${OPENSSLDIR})
     set(JSON_OUTDIR ${JSONDIR})
     set(LIBS pthread)
+    set(LIBPREFIX )
     set(BOOST_LIBVER )
     add_definitions(-std=c++11)
 ENDIF()
@@ -55,8 +57,8 @@ link_directories(
     ${BOOSTDIR}/stage/lib)
 add_executable(testweb testweb.cpp)
 target_link_libraries(testweb LINK_PUBLIC web json ${LIBS}
-    libboost_system${BOOST_LIBVER} libboost_filesystem${BOOST_LIBVER} libboost_date_time${BOOST_LIBVER}
-    ssl crypto)
+	${LIBPREFIX}boost_system${BOOST_LIBVER} ${LIBPREFIX}boost_filesystem${BOOST_LIBVER}
+	${LIBPREFIX}boost_date_time${BOOST_LIBVER} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
     file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION Release/ )
