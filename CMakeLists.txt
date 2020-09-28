@@ -56,7 +56,7 @@ link_directories(
 add_executable(testweb testweb.cpp)
 target_link_libraries(testweb LINK_PUBLIC web json ${LIBS}
     libboost_system${BOOST_LIBVER} libboost_filesystem${BOOST_LIBVER} libboost_date_time${BOOST_LIBVER}
-    libssl libcrypto)
+    ssl crypto)
 
 IF (WIN32)
     file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION Release/ )
