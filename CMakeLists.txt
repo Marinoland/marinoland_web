@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project (web)
 
-set(JSONDIR ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json)
-set(OPENSSLDIR ${CMAKE_CURRENT_SOURCE_DIR}/openssl)
-set(BOOSTDIR ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+if(NOT EXISTS ./depend)
+	execute_process(COMMAND git clone git@github.com:Marinoland/marinoland_depend.git depend)
+	execute_process(COMMAND cmake . WORKING_DIRECTORY depend)
+endif()
+set(JSONDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/json)
+set(OPENSSLDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/openssl/ext)
+set(BOOSTDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/boost/ext)
 set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
 IF (WIN32)
     set(SLASH \\)
@@ -22,20 +26,6 @@ ELSE()
     set(BOOST_LIBVER )
     add_definitions(-std=c++11)
 ENDIF()
-
-IF (WIN32)
-    execute_process( COMMAND perl Configure VC-WIN64A WORKING_DIRECTORY ${OPENSSLDIR} )
-    execute_process( COMMAND nmake WORKING_DIRECTORY ${OPENSSLDIR} )
-ELSE()
-    execute_process( COMMAND ./Configure WORKING_DIRECTORY ${OPENSSLDIR} )
-    execute_process( COMMAND make WORKING_DIRECTORY ${OPENSSLDIR} )
-ENDIF()
-
-execute_process( COMMAND .${SLASH}bootstrap.${SH_EXT} WORKING_DIRECTORY ${BOOSTDIR} )
-execute_process( COMMAND .${SLASH}b2 WORKING_DIRECTORY ${BOOSTDIR} )
-
-execute_process( COMMAND cmake . WORKING_DIRECTORY ${JSONDIR} )
-execute_process( COMMAND cmake --build . --config Release WORKING_DIRECTORY ${JSONDIR} )
 
 add_library(web STATIC
     HttpClient.cpp

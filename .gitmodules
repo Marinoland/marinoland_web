@@ -1,9 +1,0 @@
-[submodule "marinoland_json"]
-	path = marinoland_json
-	url = https://github.com/Marinoland/marinoland_json.git
-[submodule "openssl"]
-	path = openssl
-	url = git://git.openssl.org/openssl.git
-[submodule "boost"]
-	path = boost
-	url = https://github.com/boostorg/boost.git
