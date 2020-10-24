@@ -5,14 +5,12 @@ if(NOT EXISTS ./depend)
 	execute_process(COMMAND git clone git@github.com:Marinoland/marinoland_depend.git depend)
 	execute_process(COMMAND cmake . WORKING_DIRECTORY depend)
 endif()
-set(JSONDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/json)
 set(OPENSSLDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/openssl/ext)
 set(BOOSTDIR ${CMAKE_CURRENT_SOURCE_DIR}/depend/boost/ext)
 set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
 IF (WIN32)
     set(SLASH \\)
     set(SH_EXT bat)
-    set(JSON_OUTDIR ${JSONDIR}/Release)
     set(LIBS )
     set(LIBPREFIX lib)
     set(BOOST_LIBVER -vc142-mt-x64-1_75)
@@ -20,7 +18,6 @@ IF (WIN32)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
-    set(JSON_OUTDIR ${JSONDIR})
     set(LIBS pthread)
     set(LIBPREFIX )
     set(BOOST_LIBVER )
@@ -35,19 +32,17 @@ add_library(web STATIC
     WebClient.cpp
     WebResponse.cpp)
 
+file(STRINGS depend/depend.includedirs DEP_INC_DIRS)
 include_directories(
     ${OPENSSL_INCLUDEDIR}
-    ${BOOSTDIR}
-    ${BOOSTDIR}/libs/beast/include
-    ${JSONDIR})
+    ${DEP_INC_DIRS})
+file(STRINGS depend/depend.linkdirs DEP_LINK_DIRS)
 link_directories(
-    ${JSON_OUTDIR}
     ${OPENSSLDIR}
-    ${BOOSTDIR}/stage/lib)
+    ${DEP_LINK_DIRS})
 add_executable(testweb testweb.cpp)
-target_link_libraries(testweb LINK_PUBLIC web json ${LIBS}
-	${LIBPREFIX}boost_system${BOOST_LIBVER} ${LIBPREFIX}boost_filesystem${BOOST_LIBVER}
-	${LIBPREFIX}boost_date_time${BOOST_LIBVER} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
+file(STRINGS depend/depend.libs DEP_LIBS)
+target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
     file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION Release/ )
