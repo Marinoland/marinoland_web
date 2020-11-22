@@ -12,6 +12,7 @@ set(JSONDIR ${DEP_ROOT}/depend/json)
 set(OPENSSLDIR ${DEP_ROOT}/depend/openssl/ext)
 set(BOOSTDIR ${DEP_ROOT}/depend/boost/ext)
 set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
+file(WRITE depend.includedirs ${CMAKE_CURRENT_SOURCE_DIR})
 IF (WIN32)
     set(SLASH \\)
     set(SH_EXT bat)
@@ -19,6 +20,7 @@ IF (WIN32)
     set(LIBPREFIX lib)
     set(BOOST_LIBVER -vc142-mt-x64-1_75)
     add_definitions(-D_WIN32_WINNT=0x0601)
+    file(WRITE depend.linkdirs ${CMAKE_CURRENT_SOURCE_DIR}/Release)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
@@ -26,6 +28,7 @@ ELSE()
     set(LIBPREFIX )
     set(BOOST_LIBVER )
     add_definitions(-std=c++11)
+    file(WRITE depend.linkdirs ${CMAKE_CURRENT_SOURCE_DIR})
 ENDIF()
 
 add_library(web STATIC
@@ -36,16 +39,16 @@ add_library(web STATIC
     WebClient.cpp
     WebResponse.cpp)
 
-file(STRINGS depend.includedirs DEP_INC_DIRS)
+file(STRINGS ${DEP_ROOT}/depend/depend.includedirs DEP_INC_DIRS)
 include_directories(
     ${OPENSSL_INCLUDEDIR}
     ${DEP_INC_DIRS})
-file(STRINGS depend.linkdirs DEP_LINK_DIRS)
+file(STRINGS ${DEP_ROOT}/depend/depend.linkdirs DEP_LINK_DIRS)
 link_directories(
     ${OPENSSLDIR}
     ${DEP_LINK_DIRS})
 add_executable(testweb testweb.cpp)
-file(STRINGS depend.libs DEP_LIBS)
+file(STRINGS ${DEP_ROOT}/depend/depend.libs DEP_LIBS)
 target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
