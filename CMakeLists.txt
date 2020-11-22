@@ -36,16 +36,16 @@ add_library(web STATIC
     WebClient.cpp
     WebResponse.cpp)
 
-file(STRINGS depend/depend.includedirs DEP_INC_DIRS)
+file(STRINGS depend.includedirs DEP_INC_DIRS)
 include_directories(
     ${OPENSSL_INCLUDEDIR}
     ${DEP_INC_DIRS})
-file(STRINGS depend/depend.linkdirs DEP_LINK_DIRS)
+file(STRINGS depend.linkdirs DEP_LINK_DIRS)
 link_directories(
     ${OPENSSLDIR}
     ${DEP_LINK_DIRS})
 add_executable(testweb testweb.cpp)
-file(STRINGS depend/depend.libs DEP_LIBS)
+file(STRINGS depend.libs DEP_LIBS)
 target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
