@@ -53,6 +53,9 @@ target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ss
 IF (WIN32)
     file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION ${DEP_ROOT}/Release/ )
     file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION ${DEP_ROOT}/Release/ )
+	file( COPY rootcerts DESTINATION ${DEP_ROOT}/Release/ )
+ELSE()
+	file( COPY rootcerts DESTINATION ${DEP_ROOT}/ )
 ENDIF()
 
 
