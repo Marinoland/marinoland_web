@@ -10,7 +10,6 @@ if(NOT DEFINED DEP_ROOT)
 endif()
 set(JSONDIR ${DEP_ROOT}/depend/json)
 set(OPENSSLDIR ${DEP_ROOT}/depend/openssl/ext)
-set(OPENSSL_INCLUDEDIR ${OPENSSLDIR}/include)
 file(WRITE depend.libs web)
 file(WRITE depend.includedirs ${CMAKE_CURRENT_SOURCE_DIR})
 IF (WIN32)
@@ -40,8 +39,8 @@ add_library(web STATIC
     WebResponse.cpp)
 
 file(STRINGS ${DEP_ROOT}/depend/depend.includedirs DEP_INC_DIRS)
+message(${DEP_INC_DIRS})
 include_directories(
-    ${OPENSSL_INCLUDEDIR}
     ${DEP_INC_DIRS})
 file(STRINGS ${DEP_ROOT}/depend/depend.linkdirs DEP_LINK_DIRS)
 link_directories(
