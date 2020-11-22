@@ -51,8 +51,8 @@ file(STRINGS ${DEP_ROOT}/depend/depend.libs DEP_LIBS)
 target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
-    file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION Release/ )
-    file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION Release/ )
+    file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION ${DEL_ROOT}/Release/ )
+    file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION ${DEL_ROOT}/Release/ )
 ENDIF()
 
 
