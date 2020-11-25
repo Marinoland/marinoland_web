@@ -4,6 +4,7 @@
 #include <string>
 #include <boost/beast/http.hpp>
 #include <boost/beast/core.hpp>
+#include "ErrorCodes.hpp"
 
 namespace web {
 
@@ -11,11 +12,12 @@ namespace web {
     public:
         WebResponse(boost::beast::http::response<boost::beast::http::dynamic_body> res);
         WebResponse(const WebResponse & cp);
-        unsigned int getCode();
+        WebResponse(const int code, const char *body);
+        int getCode();
         std::string getBody();
         std::string operator[] (std::string key);
     private:
-        unsigned int code;
+        int code;
         std::string body;
         std::map<std::string, std::string> values;
     };

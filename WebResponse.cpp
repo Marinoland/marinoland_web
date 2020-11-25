@@ -6,7 +6,8 @@ using namespace std;
 
 namespace web {
 
-    WebResponse::WebResponse(boost::beast::http::response<boost::beast::http::dynamic_body> res) {
+    WebResponse::WebResponse(boost::beast::http::response<boost::beast::http::dynamic_body> res)
+    {
         for(auto & field : res) {
             string key(field.name_string());
             string val(field.value().data());
@@ -17,19 +18,30 @@ namespace web {
         body = boost::beast::buffers_to_string(res.body().data());
     }
 
+    WebResponse::WebResponse(const int code, const char *body)
+    {
+        this->code = code;
+        this->body = body;
+    }
 
-    WebResponse::WebResponse(const WebResponse & cp) {
+    WebResponse::WebResponse(const WebResponse & cp)
+    {
         code = cp.code;
         body = cp.body;
+        values = cp.values;
     }
-    unsigned int WebResponse::getCode() {
+
+    int WebResponse::getCode()
+    {
         return code;
     }
-    string WebResponse::getBody() {
+    string WebResponse::getBody()
+    {
         return body;
     }
 
-    string WebResponse::operator[] (string key) {
+    string WebResponse::operator[] (string key)
+    {
         return values[key];
     }
 }
