@@ -1,0 +1,9 @@
+[submodule "marinoland_json"]
+	url = git@github.com:Marinoland/marinoland_json
+	active = true
+[submodule "marinoland_openssl"]
+	url = git@github.com:Marinoland/marinoland_openssl
+	active = true
+[submodule "marinoland_boost"]
+	url = git@github.com:Marinoland/marinoland_boost
+	active = true
