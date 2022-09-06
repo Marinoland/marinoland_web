@@ -9,7 +9,8 @@ add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
 add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
 
 set(JSONDIR ${CMAKE_BINARY_DIR}/json)
-set(OPENSSLDIR ${CMAKE_BINARY_DIR}/openssl/ext)
+set(OPENSSLDIR ${CMAKE_BINARY_DIR}/ext/openssl)
+set(BOOSTDIR ${CMAKE_BINARY_DIR}/ext/boost)
 
 IF (WIN32)
     set(SLASH \\)
@@ -39,12 +40,20 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json/include
 )
-link_directories(${OPENSSLDIR} ${JSONDIR})
+link_directories(
+    ${JSONDIR}
+    ${OPENSSLDIR}
+    ${BOOSTDIR}
+)
 add_executable(testweb test/testweb.cpp)
-target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
+target_link_libraries(testweb LINK_PUBLIC web
+    ${LIBS}
+    ${LIBPREFIX}json
+    ${LIBPREFIX}ssl
+    ${LIBPREFIX}crypto
+    ${LIBPREFIX}boost_system
+    ${LIBPREFIX}boost_filesystem
+    ${LIBPREFIX}boost_date_time
+)
 
-IF (WIN32)
-    file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-    file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-ENDIF()
 file( COPY rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
