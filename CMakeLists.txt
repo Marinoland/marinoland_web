@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 project (web)
 
 execute_process(COMMAND git submodule init)
-execute_process(COMMAND git submodule update --remote)
+execute_process(COMMAND git submodule update --recursive)
 
 add_subdirectory(marinoland_json ${CMAKE_CURRENT_BINARY_DIR}/json)
-add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
-add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
+add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext)
+add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext)
 
 set(JSONDIR ${CMAKE_BINARY_DIR}/json)
 set(OPENSSLDIR ${CMAKE_BINARY_DIR}/openssl/ext)
