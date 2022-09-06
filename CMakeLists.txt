@@ -5,8 +5,8 @@ execute_process(COMMAND git submodule init)
 execute_process(COMMAND git submodule update --recursive)
 
 add_subdirectory(marinoland_json ${CMAKE_CURRENT_BINARY_DIR}/json)
-add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext)
-add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext)
+add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
+add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
 
 set(JSONDIR ${CMAKE_BINARY_DIR}/json)
 set(OPENSSLDIR ${CMAKE_BINARY_DIR}/openssl/ext)
