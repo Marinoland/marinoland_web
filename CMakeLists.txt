@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 project (web)
 
 execute_process(COMMAND git submodule init)
-execute_process(COMMAND git submodule update)
+execute_process(COMMAND git submodule update --remote)
 
 add_subdirectory(marinoland_json ${CMAKE_CURRENT_BINARY_DIR}/json)
-add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/openssl)
-add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/boost)
+add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
+add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
 
 set(JSONDIR ${CMAKE_BINARY_DIR}/json)
 set(OPENSSLDIR ${CMAKE_BINARY_DIR}/openssl/ext)
@@ -28,24 +28,23 @@ ELSE()
 ENDIF()
 
 add_library(web STATIC
-    HttpClient.cpp
-    HttpsClient.cpp
-    RestClient.cpp
-    RestWebResponse.cpp
-    WebClient.cpp
-    WebResponse.cpp)
+    src/HttpClient.cpp
+    src/HttpsClient.cpp
+    src/RestClient.cpp
+    src/RestWebResponse.cpp
+    src/WebClient.cpp
+    src/WebResponse.cpp)
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json/
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json/include
 )
 link_directories(${OPENSSLDIR} ${JSONDIR})
-add_executable(testweb testweb.cpp)
+add_executable(testweb test/testweb.cpp)
 target_link_libraries(testweb LINK_PUBLIC web ${LIBS} ${DEP_LIBS} ${LIBPREFIX}ssl ${LIBPREFIX}crypto)
 
 IF (WIN32)
-    file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release/ )
-    file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Release/ )
+    file( COPY ${OPENSSLDIR}/libssl-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+    file( COPY ${OPENSSLDIR}/libcrypto-3.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 ENDIF()
 file( COPY rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-
