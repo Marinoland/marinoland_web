@@ -17,13 +17,14 @@ IF (WIN32)
     set(SH_EXT bat)
     set(LIBS )
     set(LIBPREFIX lib)
-    set(BOOST_LIBVER -vc142-mt-x64-1_75)
+    set(BOOST_LIBVER -vc143-mt-x64-1_81)
     add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
     set(LIBS pthread)
     set(LIBPREFIX )
+    set(LIBSUFFIX )
     set(BOOST_LIBVER )
     add_definitions(-std=c++11)
 ENDIF()
@@ -39,6 +40,7 @@ add_library(web STATIC
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_json/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/marinoland_boost/ext/
 )
 link_directories(
     ${JSONDIR}
@@ -51,9 +53,9 @@ target_link_libraries(testweb LINK_PUBLIC web
     ${LIBPREFIX}json
     ${LIBPREFIX}ssl
     ${LIBPREFIX}crypto
-    ${LIBPREFIX}boost_system
-    ${LIBPREFIX}boost_filesystem
-    ${LIBPREFIX}boost_date_time
+    ${LIBPREFIX}boost_system${BOOST_LIBVER}
+    ${LIBPREFIX}boost_filesystem${BOOST_LIBVER}
+    ${LIBPREFIX}boost_date_time${BOOST_LIBVER}
 )
 
 file( COPY rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
