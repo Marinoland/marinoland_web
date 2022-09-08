@@ -8,7 +8,6 @@ add_subdirectory(marinoland_json ${CMAKE_CURRENT_BINARY_DIR}/json)
 add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
 add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
 
-set(JSONDIR ${CMAKE_BINARY_DIR}/json)
 set(OPENSSLDIR ${CMAKE_BINARY_DIR}/ext/openssl)
 set(BOOSTDIR ${CMAKE_BINARY_DIR}/ext/boost)
 
@@ -18,7 +17,8 @@ IF (WIN32)
     set(LIBS )
     set(LIBPREFIX lib)
     set(BOOST_LIBVER -vc143-mt-x64-1_81)
-    add_definitions(-D_WIN32_WINNT=0x0601)
+    set(JSONDIR ${CMAKE_BINARY_DIR}/json/${CMAKE_BUILD_TYPE})
+    #add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
@@ -26,6 +26,7 @@ ELSE()
     set(LIBPREFIX )
     set(LIBSUFFIX )
     set(BOOST_LIBVER )
+    set(JSONDIR ${CMAKE_BINARY_DIR}/json)
     add_definitions(-std=c++11)
 ENDIF()
 
@@ -49,9 +50,10 @@ link_directories(
     ${BOOSTDIR}
 )
 add_executable(testweb test/testweb.cpp)
-target_link_libraries(testweb LINK_PUBLIC web
+target_link_libraries(testweb LINK_PUBLIC
     ${LIBS}
-    ${LIBPREFIX}json
+    web
+    json
     ${LIBPREFIX}ssl
     ${LIBPREFIX}crypto
     ${LIBPREFIX}boost_system${BOOST_LIBVER}

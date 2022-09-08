@@ -2,6 +2,7 @@
 #define __WEBRESPONSE_HPP__
 
 #include <string>
+#include <map>
 #include <boost/beast/http.hpp>
 #include <boost/beast/core.hpp>
 #include "ErrorCodes.hpp"
