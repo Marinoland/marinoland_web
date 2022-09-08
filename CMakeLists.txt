@@ -16,16 +16,18 @@ IF (WIN32)
     set(SH_EXT bat)
     set(LIBS )
     set(LIBPREFIX lib)
-    set(BOOST_LIBVER -vc143-mt-x64-1_81)
+    set(SSLSUFFIX _static)
+	string(REPLACE v vc toolset ${CMAKE_VS_PLATFORM_TOOLSET})
+    set(BOOSTSUFFIX -${toolset}-mt-x64-1_81)
     set(JSONDIR ${CMAKE_BINARY_DIR}/json/${CMAKE_BUILD_TYPE})
-    #add_definitions(-D_WIN32_WINNT=0x0601)
+    add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
     set(LIBS pthread)
     set(LIBPREFIX )
-    set(LIBSUFFIX )
-    set(BOOST_LIBVER )
+    set(SSLSUFFIX )
+    set(BOOSTSUFFIX )
     set(JSONDIR ${CMAKE_BINARY_DIR}/json)
     add_definitions(-std=c++11)
 ENDIF()
@@ -54,11 +56,11 @@ target_link_libraries(testweb LINK_PUBLIC
     ${LIBS}
     web
     json
-    ${LIBPREFIX}ssl
-    ${LIBPREFIX}crypto
-    ${LIBPREFIX}boost_system${BOOST_LIBVER}
-    ${LIBPREFIX}boost_filesystem${BOOST_LIBVER}
-    ${LIBPREFIX}boost_date_time${BOOST_LIBVER}
+    ${LIBPREFIX}ssl${SSLSUFFIX}
+    ${LIBPREFIX}crypto${SSLSUFFIX}
+    ${LIBPREFIX}boost_system${BOOSTSUFFIX}
+    ${LIBPREFIX}boost_filesystem${BOOSTSUFFIX}
+    ${LIBPREFIX}boost_date_time${BOOSTSUFFIX}
 )
 
 file( COPY rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
