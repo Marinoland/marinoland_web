@@ -11,6 +11,7 @@ add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
 set(OPENSSLDIR ${CMAKE_BINARY_DIR}/ext/openssl)
 set(BOOSTDIR ${CMAKE_BINARY_DIR}/ext/boost)
 
+
 IF (WIN32)
     set(SLASH \\)
     set(SH_EXT bat)
@@ -19,7 +20,7 @@ IF (WIN32)
     set(SSLSUFFIX _static)
 	string(REPLACE v vc toolset ${CMAKE_VS_PLATFORM_TOOLSET})
     set(BOOSTSUFFIX -${toolset}-mt-x64-1_81)
-    set(JSONDIR ${CMAKE_BINARY_DIR}/json/${CMAKE_BUILD_TYPE})
+    set(JSONDIR ${CMAKE_BINARY_DIR}/json)
     add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
     set(SLASH /)
@@ -63,4 +64,11 @@ target_link_libraries(testweb LINK_PUBLIC
     ${LIBPREFIX}boost_date_time${BOOSTSUFFIX}
 )
 
-file( COPY rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+if(WIN32)
+    add_custom_command(TARGET web POST_BUILD
+        #COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/" "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/ "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/rootcerts" 
+    )
+else()
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+endif()
