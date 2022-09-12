@@ -4,12 +4,12 @@ project (web)
 execute_process(COMMAND git submodule init)
 execute_process(COMMAND git submodule update --recursive)
 
-add_subdirectory(marinoland_json ${CMAKE_CURRENT_BINARY_DIR}/json)
-add_subdirectory(marinoland_openssl ${CMAKE_CURRENT_BINARY_DIR}/ext/openssl)
-add_subdirectory(marinoland_boost ${CMAKE_CURRENT_BINARY_DIR}/ext/boost)
+add_subdirectory(marinoland_json ${PROJECT_BINARY_DIR}/json)
+add_subdirectory(marinoland_openssl ${PROJECT_BINARY_DIR}/ext/openssl)
+add_subdirectory(marinoland_boost ${PROJECT_BINARY_DIR}/ext/boost)
 
-set(OPENSSLDIR ${CMAKE_BINARY_DIR}/ext/openssl)
-set(BOOSTDIR ${CMAKE_BINARY_DIR}/ext/boost)
+set(OPENSSLDIR ${PROJECT_BINARY_DIR}/ext/openssl)
+set(BOOSTDIR ${PROJECT_BINARY_DIR}/ext/boost)
 
 
 IF (WIN32)
@@ -20,7 +20,7 @@ IF (WIN32)
     set(SSLSUFFIX _static)
 	string(REPLACE v vc toolset ${CMAKE_VS_PLATFORM_TOOLSET})
     set(BOOSTSUFFIX -${toolset}-mt-x64-1_81)
-    set(JSONDIR ${CMAKE_BINARY_DIR}/json)
+    set(JSONDIR ${PROJECT_BINARY_DIR}/json)
     add_definitions(-D_WIN32_WINNT=0x0601)
 ELSE()
     set(SLASH /)
@@ -29,7 +29,7 @@ ELSE()
     set(LIBPREFIX )
     set(SSLSUFFIX )
     set(BOOSTSUFFIX )
-    set(JSONDIR ${CMAKE_BINARY_DIR}/json)
+    set(JSONDIR ${PROJECT_BINARY_DIR}/json)
     add_definitions(-std=c++11)
 ENDIF()
 
@@ -66,9 +66,9 @@ target_link_libraries(testweb LINK_PUBLIC
 
 if(WIN32)
     add_custom_command(TARGET web POST_BUILD
-        #COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/" "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/ "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/rootcerts" 
+        #COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/" "${PROJECT_BINARY_DIR}/$<CONFIG>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts/ "${PROJECT_BINARY_DIR}/$<CONFIG>/rootcerts" 
     )
 else()
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/rootcerts DESTINATION ${PROJECT_BINARY_DIR} )
 endif()
