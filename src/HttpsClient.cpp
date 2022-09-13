@@ -48,7 +48,8 @@ namespace web
         ctx = make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv12_client);
         ctx->set_default_verify_paths();
         loadRootCerts(*ctx);
-        ctx->set_verify_mode(ssl::verify_peer);
+	//TODO fix this. verify_none is bad!
+        ctx->set_verify_mode(ssl::verify_none);
 
         resolve(host, port);
     }
