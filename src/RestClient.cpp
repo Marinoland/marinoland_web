@@ -1,7 +1,7 @@
-#include "RestClient.hpp"
+#include "web/RestClient.hpp"
 #include <iostream>
-#include "WebClient.hpp"
-#include "RestWebResponse.hpp"
+#include "web/WebClient.hpp"
+#include "web/RestWebResponse.hpp"
 
 using namespace std;
 

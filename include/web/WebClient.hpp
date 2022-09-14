@@ -1,13 +1,10 @@
-#ifndef __WEBCLIENT_HPP__
-#define __WEBCLIENT_HPP__
+#pragma once
 
 #include <string>
 #include <map>
 #include <functional>
 
-#include "WebResponse.hpp"
-//#include "HttpClient.hpp"
-//#include "HttpsClient.hpp"
+#include "web/WebResponse.hpp"
 namespace web {
 
     class WebClient {
@@ -17,5 +14,3 @@ namespace web {
     private:
     };
 }
-
-#endif

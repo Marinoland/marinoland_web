@@ -1,8 +1,7 @@
-#ifndef __RESTWEBRESPONSE_HPP__
-#define __RESTWEBRESPONSE_HPP__
+#pragma once
 
-#include "WebResponse.hpp"
-#include <Json.hpp>
+#include "web/WebResponse.hpp"
+#include <json/Json.hpp>
 
 namespace web {
     class RestWebResponse : public WebResponse {
@@ -12,5 +11,3 @@ namespace web {
         json::nodeptr getJson();
     };
 }
-
-#endif

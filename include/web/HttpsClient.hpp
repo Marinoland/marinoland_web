@@ -1,8 +1,7 @@
-#ifndef __HTTPSCLIENT_HPP__
-#define __HTTPSCLIENT_HPP__
+#pragma once
 
-#include "WebResponse.hpp"
-#include "HttpClient.hpp"
+#include "web/WebResponse.hpp"
+#include "web/HttpClient.hpp"
 
 #include <string>
 #include <memory>
@@ -26,5 +25,3 @@ namespace web {
         std::shared_ptr<boost::asio::ssl::context> ctx;
     };
 };
-
-#endif

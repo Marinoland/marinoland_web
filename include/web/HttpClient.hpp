@@ -1,8 +1,6 @@
-#ifndef __HTTPCLIENT_HPP__
-#define __HTTPCLIENT_HPP__
+#pragma once
 
-
-#include "WebResponse.hpp"
+#include "web/WebResponse.hpp"
 
 #include <string>
 #include <memory>
@@ -29,5 +27,3 @@ namespace web {
         boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp> resolvedHost;
     };
 }
-
-#endif

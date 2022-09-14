@@ -1,11 +1,10 @@
-#ifndef __WEBRESPONSE_HPP__
-#define __WEBRESPONSE_HPP__
+#pragma once
 
 #include <string>
 #include <map>
 #include <boost/beast/http.hpp>
 #include <boost/beast/core.hpp>
-#include "ErrorCodes.hpp"
+#include "web/ErrorCodes.hpp"
 
 namespace web {
 
@@ -24,5 +23,3 @@ namespace web {
     };
 
 };
-
-#endif

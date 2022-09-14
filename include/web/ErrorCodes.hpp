@@ -1,5 +1,4 @@
-#ifndef __ErrorCodes_hpp__
-#define __ErrorCodes_hpp__
+#pragma once
 
 #include <boost/beast/core.hpp>
 #include <openssl/storeerr.h>
@@ -22,5 +21,3 @@ namespace web {
         }
     }
 }
-
-#endif

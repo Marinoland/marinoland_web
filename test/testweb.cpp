@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include "HttpsClient.hpp"
-#include "WebClient.hpp"
-#include "RestClient.hpp"
+#include "web/HttpsClient.hpp"
+#include "web/WebClient.hpp"
+#include "web/RestClient.hpp"
 
 using namespace std;
 
@@ -27,11 +27,11 @@ int main (int argc, char **argv)
     web::RestClient().get("http://dummy.restapiexample.com/api/v1/employees",
     map<string, string>(),
     [](web::RestWebResponse & response) {
-        response.getJson()->asObject([] (json::JsonObjectNode & root) {
+        response.getJson()->asObject([] (json::ObjectNode & root) {
             cout << root.to_json() << endl;
-            root.get("data")->asArray([] (json::JsonArrayNode & data) {
+            root.get("data")->asArray([] (json::ArrayNode & data) {
                 for(json::nodeptr employeeptr : data) {
-                    employeeptr->asObject([] (json::JsonObjectNode & employee) {
+                    employeeptr->asObject([] (json::ObjectNode & employee) {
                         cout
                         << employee.get("id")->to_string()
                         << ' '
@@ -43,14 +43,6 @@ int main (int argc, char **argv)
                 }
             });
         });
-        //json::JsonObjectNode *root = dynamic_cast<json::JsonObjectNode *>(tree.get());
-        /*
-        for (pair<string, json::nodeptr> node : tree) {
-            const ptree & record = node.second;
-            cout << record.get("employee_name", "null") <<  "\t"
-                << record.get("employee_age", "null") << endl;
-        }
-        */
     });
     return 0;
 }

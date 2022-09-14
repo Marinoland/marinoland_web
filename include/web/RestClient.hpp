@@ -1,9 +1,8 @@
-#ifndef __RESTCLIENT_HPP__
-#define __RESTCLIENT_HPP__
+#pragma once
 
 #include <map>
 #include <string>
-#include "RestWebResponse.hpp"
+#include "web/RestWebResponse.hpp"
 
 namespace web {
 
@@ -13,5 +12,3 @@ namespace web {
         void post(std::string url, std::map<std::string, std::string> header, json::nodeptr body, std::function<void(RestWebResponse & response)> f);
     };
 }
-
-#endif

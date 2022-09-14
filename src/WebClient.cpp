@@ -1,6 +1,6 @@
-#include "WebClient.hpp"
-#include "HttpClient.hpp"
-#include "HttpsClient.hpp"
+#include "web/WebClient.hpp"
+#include "web/HttpClient.hpp"
+#include "web/HttpsClient.hpp"
 #include <iostream>
 #include <vector>
 
