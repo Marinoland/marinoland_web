@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include "web/URLEncode.hpp"
 #include "web/HttpsClient.hpp"
 #include "web/WebClient.hpp"
 #include "web/RestClient.hpp"
@@ -16,6 +17,9 @@ int main (int argc, char **argv)
     });
     cout << endl;
 
+    cout << "URLEncode Test" << endl;
+    string teststr = "There's #nothing? (not [e&%\\])";
+    cout << "Convert \"" << teststr << "\" to \"" << web::urlEncode(teststr) << "\"" << endl;
 
     web::WebClient().get("https://google.com/",
     map<string,string>(),
