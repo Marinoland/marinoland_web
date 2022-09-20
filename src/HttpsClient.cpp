@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <dirent.h>
 
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
@@ -20,25 +21,32 @@ using namespace std;
 namespace web
 {
 
-    void loadRootCerts(ssl::context& ctx)
+    int loadRootCerts(ssl::context& ctx)
     {
-        boost::system::error_code ec;
-        for(boost::filesystem::directory_entry & p :
-                boost::filesystem::directory_iterator("rootcerts")) {
-            ifstream certfile(p.path().c_str());
-            string cert;
-
-            while (!certfile.fail() && !certfile.eof()) {
-                string line;
-                getline(certfile, line);
-                cert += line;
-                cert += "\n";
+        DIR *dir;
+        struct dirent *en;
+        boost::system::error_code ec = boost::system::errc::make_error_code(boost::system::errc::success);
+        if(dir = opendir("./rootcerts")) {
+            while((en = readdir(dir)) != nullptr) {
+                if(DT_REG != en->d_type)
+                    continue;
+                ifstream certfile(string("rootcerts/") + en->d_name);
+                string cert;
+                while (!certfile.fail() && !certfile.eof()) {
+                    string line;
+                    getline(certfile, line);
+                    cert += line;
+                    cert += "\n";
+                }
+                ctx.add_certificate_authority(
+                    boost::asio::buffer(cert.data(), cert.size()), ec);
+                if(ec) {
+                    cerr << "ERROR while loading " << en->d_name << ": " << ec << endl;
+                }
             }
-            ctx.add_certificate_authority(
-                boost::asio::buffer(cert.data(), cert.size()), ec);
-            if(ec)
-                throw boost::system::system_error{ec};
+            closedir(dir);
         }
+        return ec ? -1 : 0;
     }
 
     HttpsClient::HttpsClient(
