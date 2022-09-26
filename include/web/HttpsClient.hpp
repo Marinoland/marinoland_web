@@ -20,6 +20,7 @@ namespace web {
 
         WebResponse get(const std::string & path, const std::map<std::string, std::string> header);
         WebResponse post(const std::string & path, const std::map<std::string, std::string> header, const std::string body);
+        WebResponse del(const std::string & path, const std::map<std::string, std::string> header);
 
     private:
         std::shared_ptr<boost::asio::ssl::context> ctx;

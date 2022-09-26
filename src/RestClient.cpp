@@ -33,4 +33,16 @@ namespace web {
             f(restResp);
         });
     }
+
+    void RestClient::del(std::string url,
+            std::map<std::string, std::string> header,
+            std::function<void(RestWebResponse & response)> f) {
+
+        web::WebClient().del(url,
+        header,
+        [&](web::WebResponse response) {
+            RestWebResponse restResp(response);
+            f(restResp);
+        });
+    }
 }

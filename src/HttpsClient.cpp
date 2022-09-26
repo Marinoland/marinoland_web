@@ -145,4 +145,55 @@ namespace web
         WebResponse response(res);
         return response;
     }
+
+    WebResponse HttpsClient::del(const string & path, const map<string, string> header)
+    {
+        beast::ssl_stream<beast::tcp_stream> stream(ioc, *ctx);
+        // Set SNI Hostname (many hosts need this to handshake successfully)
+        
+        if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
+        {
+            beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
+            std::stringstream msg;
+            msg << "ERROR contacting host: " << host << " path: " << path << "\n" << ec.message();
+            std::cerr << msg.str() << std::endl;
+            WebResponse res(-1, msg.str().c_str());
+            return res;
+        } else {
+            try
+            {
+                beast::get_lowest_layer(stream).connect(resolvedHost);
+                stream.handshake(ssl::stream_base::client);
+
+                http::request<http::string_body> req{
+                    http::verb::delete_, path, 11};
+                req.set(http::field::host, host);
+                req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+                for(pair<string, string> entry : header) {
+                    req.set(entry.first, entry.second);
+                }
+                http::write(stream, req);
+                beast::flat_buffer buffer;
+                http::response<http::dynamic_body> res;
+                http::read(stream, buffer, res);
+                beast::error_code ec;
+                stream.shutdown(ec);
+                WebResponse response(res);
+                return response;
+            }
+            catch (boost::system::system_error err)
+            {
+                std::stringstream msg;
+                msg << "ERROR: deleting " << host << ":" << port <<
+                    " path: " << path << "\n" << err.code() << "\n" << err.what() << "\n" << err.code().message();
+                std::cerr << msg.str() << std::endl;
+                WebResponse res(
+                    convertBoostError(err.code().value()),
+                    msg.str().c_str()
+                );
+                return res;
+            }
+        }
+    }
+
 }

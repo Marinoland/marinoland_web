@@ -10,5 +10,6 @@ namespace web {
     public:
         void get(std::string url, std::map<std::string, std::string> header, std::function<void(RestWebResponse & response)> f);
         void post(std::string url, std::map<std::string, std::string> header, json::nodeptr body, std::function<void(RestWebResponse & response)> f);
+        void del(std::string url, std::map<std::string, std::string> header, std::function<void(RestWebResponse & response)> f);
     };
 }

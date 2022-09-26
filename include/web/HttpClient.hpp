@@ -16,6 +16,7 @@ namespace web {
 
         virtual WebResponse get(const std::string & path, const std::map<std::string, std::string> header);
         virtual WebResponse post(const std::string & path, const std::map<std::string, std::string> header, const std::string body);
+        virtual WebResponse del(const std::string & path, const std::map<std::string, std::string> header);
 
     protected:
         HttpClient() = default;

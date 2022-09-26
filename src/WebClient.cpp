@@ -78,4 +78,17 @@ namespace web {
             }
         });
     }
+    void WebClient::del(string url,
+            map<string, string> header,
+            std::function<void(WebResponse response)> f) {
+        
+        parseUrl(url, [&] (HttpClient & client, string path) {
+            WebResponse response = client.del(path, header);
+            if(response.getCode() == 301) {
+                get(response["Location"], header, f);
+            } else {
+                f(response);
+            }
+        });
+    }
 }
