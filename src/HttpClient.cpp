@@ -41,19 +41,25 @@ namespace web {
         }
     }
 
-    WebResponse HttpClient::get(const string & path, const map<string, string> header)
-    {
-        try
-        {
+    void HttpClient::request(string url,
+        boost::beast::http::verb method,
+        const map<string, string> & header,
+        const string body,
+        function<void(WebResponse &)> done) {
+
+        try {
             beast::tcp_stream stream(ioc);
             stream.connect(resolvedHost);
-            http::request<http::string_body> req{
-                http::verb::get, path, 11};
+            http::request<http::string_body> req{method, url, 11};
             req.set(http::field::host, host);
             req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+            std::stringstream contentLength;
+            contentLength << body.size();
+            req.set("Content-Length", contentLength.str());
             for(pair<string, string> entry : header) {
                 req.set(entry.first, entry.second);
             }
+            req.body() = body;
             http::write(stream, req);
             beast::flat_buffer buffer;
             http::response<http::dynamic_body> res;
@@ -61,80 +67,32 @@ namespace web {
             beast::error_code ec;
             stream.socket().shutdown(tcp::socket::shutdown_both, ec);
             WebResponse response(res);
-            return response;
-        }
-        catch (boost::system::system_error err)
-        {
+            done(response);
+        } catch (boost::system::system_error err) {
             std::stringstream msg;
-            msg << "ERROR: getting " << host << ":" << port <<
-                " path: " << path << "\n" << err.code() << "\n" << err.what() << "\n" << err.code().message();
+            msg << "HTTP ERROR: requesting " << host << ":" << port <<
+                " path: " << url << "\n" << err.code() << "\n" << err.what() << "\n" << err.code().message();
             std::cerr << msg.str() << std::endl;
             WebResponse res(
                 convertBoostError(err.code().value()),
                 msg.str().c_str()
             );
-            return res;
+            done(res);
         }
     }
 
-    WebResponse HttpClient::post(const string & path, const map<string, string> header, const string body)
-    {
-        beast::tcp_stream stream(ioc);
-        stream.connect(resolvedHost);
-        http::request<http::string_body> req{
-            http::verb::post, path, 11};
-        req.set(http::field::host, host);
-        req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-        std::stringstream contentLength;
-        contentLength << body.size();
-        req.set("Content-Length", contentLength.str());
-        for(pair<string, string> entry : header) {
-            req.set(entry.first, entry.second);
-        }
-        req.body() = body;
-        http::write(stream, req);
-        beast::flat_buffer buffer;
-        http::response<http::dynamic_body> res;
-        http::read(stream, buffer, res);
-        beast::error_code ec;
-        stream.socket().shutdown(tcp::socket::shutdown_both, ec);
-        WebResponse response(res);
-        return response;
+    void HttpClient::get(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::get, header, "", done);
     }
 
-    WebResponse HttpClient::del(const string & path, const map<string, string> header)
-    {
-        try
-        {
-            beast::tcp_stream stream(ioc);
-            stream.connect(resolvedHost);
-            http::request<http::string_body> req{
-                http::verb::delete_, path, 11};
-            req.set(http::field::host, host);
-            req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-            for(pair<string, string> entry : header) {
-                req.set(entry.first, entry.second);
-            }
-            http::write(stream, req);
-            beast::flat_buffer buffer;
-            http::response<http::dynamic_body> res;
-            http::read(stream, buffer, res);
-            beast::error_code ec;
-            stream.socket().shutdown(tcp::socket::shutdown_both, ec);
-            WebResponse response(res);
-            return response;
-        }
-        catch (boost::system::system_error err)
-        {
-            std::stringstream msg;
-            msg << "ERROR: deleting " << host << ":" << port <<
-                " path: " << path << "\n" << err.code() << "\n" << err.what() << "\n" << err.code().message();
-            std::cerr << msg.str() << std::endl;
-            WebResponse res(
-                convertBoostError(err.code().value()),
-                msg.str().c_str()
-            );
-            return res;
-        }
+    void HttpClient::post(const string & path, const map<string, string> header, const string body,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::post, header, body, done);
+    }
+
+    void HttpClient::del(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::delete_, header, "", done);
     }
 }

@@ -18,9 +18,11 @@ namespace web {
     public:
         HttpsClient(const std::string & host, const std::string & port);
 
-        WebResponse get(const std::string & path, const std::map<std::string, std::string> header);
-        WebResponse post(const std::string & path, const std::map<std::string, std::string> header, const std::string body);
-        WebResponse del(const std::string & path, const std::map<std::string, std::string> header);
+        virtual void request(string url,
+            boost::beast::http::verb method,
+            const map<string, string>& header,
+            const string body,
+            function<void(WebResponse &)> done);
 
     private:
         std::shared_ptr<boost::asio::ssl::context> ctx;

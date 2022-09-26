@@ -56,12 +56,14 @@ namespace web {
             std::function<void(WebResponse response)> f) {
         
         parseUrl(url, [&] (HttpClient & client, string path) {
-            WebResponse response = client.get(path, header);
-            if(response.getCode() == 301) {
-                get(response["Location"], header, f);
-            } else {
-                f(response);
-            }
+            client.get(path, header,
+                [f, header, this] (WebResponse & response) {
+                    if(response.getCode() == 301) {
+                        get(response["Location"], header, f);
+                    } else {
+                        f(response);
+                    }
+                });
         });
     }
     void WebClient::post(string url,
@@ -70,12 +72,14 @@ namespace web {
             std::function<void(WebResponse response)> f) {
         
         parseUrl(url, [&] (HttpClient & client, string path) {
-            WebResponse response = client.post(path, header, body);
-            if(response.getCode() == 301) {
-                post(response["Location"], header, body, f);
-            } else {
-                f(response);
-            }
+            client.post(path, header, body,
+                [f, header, body, this] (WebResponse & response) {
+                    if(response.getCode() == 301) {
+                        post(response["Location"], header, body, f);
+                    } else {
+                        f(response);
+                    }
+                });
         });
     }
     void WebClient::del(string url,
@@ -83,12 +87,14 @@ namespace web {
             std::function<void(WebResponse response)> f) {
         
         parseUrl(url, [&] (HttpClient & client, string path) {
-            WebResponse response = client.del(path, header);
-            if(response.getCode() == 301) {
-                get(response["Location"], header, f);
-            } else {
-                f(response);
-            }
+            client.del(path, header,
+                [f, header, this] (WebResponse & response) {
+                    if(response.getCode() == 301) {
+                        get(response["Location"], header, f);
+                    } else {
+                        f(response);
+                    }
+                });
         });
     }
 }
