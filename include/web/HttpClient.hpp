@@ -20,7 +20,15 @@ namespace web {
             function<void(WebResponse &)> done);
         void post(const string & path, const map<string, string> header, const string body,
             function<void(WebResponse &)> done);
+        void put(const string & path, const map<string, string> header, const string body,
+            function<void(WebResponse &)> done);
+        void patch(const string & path, const map<string, string> header, const string body,
+            function<void(WebResponse &)> done);
         void del(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done);
+        void head(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done);
+        void options(const string & path, const map<string, string> header,
             function<void(WebResponse &)> done);
 
         virtual void request(string url,

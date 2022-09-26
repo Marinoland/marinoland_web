@@ -91,8 +91,28 @@ namespace web {
         request(path, http::verb::post, header, body, done);
     }
 
+    void HttpClient::put(const string & path, const map<string, string> header, const string body,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::put, header, body, done);
+    }
+
+    void HttpClient::patch(const string & path, const map<string, string> header, const string body,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::patch, header, body, done);
+    }
+
     void HttpClient::del(const string & path, const map<string, string> header,
             function<void(WebResponse &)> done) {
         request(path, http::verb::delete_, header, "", done);
+    }
+
+    void HttpClient::head(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::head, header, "", done);
+    }
+
+    void HttpClient::options(const string & path, const map<string, string> header,
+            function<void(WebResponse &)> done) {
+        request(path, http::verb::options, header, "", done);
     }
 }
