@@ -85,13 +85,15 @@ namespace web
                 beast::get_lowest_layer(stream).connect(resolvedHost);
                 stream.handshake(ssl::stream_base::client);
 
-                http::request<http::string_body> req{
-                    http::verb::get, url, 11};
+                http::request<http::string_body> req{method, url, 11};
                 req.set(http::field::host, host);
                 req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
                 for(pair<string, string> entry : header) {
                     req.set(entry.first, entry.second);
                 }
+                stringstream contentLength;
+                contentLength << body.size();
+                req.set("Content-Length", contentLength.str());
                 req.body() = body;
                 http::write(stream, req);
                 beast::flat_buffer buffer;
