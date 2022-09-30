@@ -30,6 +30,7 @@ ELSE()
 ENDIF()
 
 add_library(web STATIC
+    src/Authorization.cpp
     src/HttpClient.cpp
     src/HttpsClient.cpp
     src/RestClient.cpp
