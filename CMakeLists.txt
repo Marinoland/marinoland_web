@@ -22,11 +22,12 @@ IF (WIN32)
 ELSE()
     set(SLASH /)
     set(SH_EXT sh)
-    set(LIBS pthread)
     set(LIBPREFIX )
     set(SSLSUFFIX )
     set(JSONDIR ${CMAKE_BINARY_DIR}/json)
     add_definitions(-std=c++11)
+    find_package(Threads REQUIRED)
+    set(LIBS dl Threads::Threads)
 ENDIF()
 
 add_library(web STATIC
@@ -50,11 +51,11 @@ link_directories(
 )
 add_executable(testweb test/testweb.cpp)
 target_link_libraries(testweb LINK_PUBLIC
-    ${LIBS}
     web
     json
     ${LIBPREFIX}ssl${SSLSUFFIX}
     ${LIBPREFIX}crypto${SSLSUFFIX}
+    ${LIBS}
 )
 
 if(WIN32)
